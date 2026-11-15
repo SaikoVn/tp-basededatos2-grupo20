@@ -1,3 +1,6 @@
+using static Servicio.AccesoDatos;
+using Servicio;
+using System.Data;
 using System;
 using System.Web.UI;
 
@@ -5,7 +8,8 @@ namespace VeterinariaWeb
 {
     public partial class PaginaAuditoria : PaginaClinica
     {
-        private readonly Dominio.Auditoria dominio = new Dominio.Auditoria();
+        // Operaciones SQL de esta página.
+        private readonly AccesoDatos db = new AccesoDatos();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -18,7 +22,7 @@ namespace VeterinariaWeb
             DateTime? hasta = FechaOpcional(HastaLista);
             if (desde.HasValue && hasta.HasValue && desde.Value.Date > hasta.Value.Date)
                 throw new ArgumentException("La fecha desde debe ser anterior o igual a la fecha hasta.");
-            Vincular(Tabla, dominio.Listar(IdOpcional(FiltroId), IdOpcional(FiltroTurno),
+            Vincular(Tabla, Listar(IdOpcional(FiltroId), IdOpcional(FiltroTurno),
                 EventoLista.SelectedValue, desde, hasta));
         }
 
@@ -26,5 +30,22 @@ namespace VeterinariaWeb
         {
             Intentar(Cargar);
         }
+        private DataTable Listar(int id, int turno, string evento, DateTime? desde, DateTime? hasta)
+        {
+            evento = evento ?? "";
+            DateTime? hastaExclusivo = hasta.HasValue ? hasta.Value.Date.AddDays(1) : (DateTime?)null;
+            return db.Consultar(@"SELECT id_auditoria ID, id_turno Turno,
+                    tipo_evento Evento, fecha_evento Fecha, motivo_evento Motivo
+                    FROM dbo.AuditoriaTurnos
+                    WHERE (@id = 0 OR id_auditoria = @id)
+                      AND (@turno = 0 OR id_turno = @turno)
+                      AND (@evento = '' OR tipo_evento = @evento)
+                      AND (@desde IS NULL OR fecha_evento >= @desde)
+                      AND (@hasta IS NULL OR fecha_evento < @hasta)
+                    ORDER BY fecha_evento DESC, id_auditoria DESC",
+                Param("@id", id), Param("@turno", turno), Param("@evento", evento),
+                Param("@desde", desde), Param("@hasta", hastaExclusivo));
+        }
+
     }
 }

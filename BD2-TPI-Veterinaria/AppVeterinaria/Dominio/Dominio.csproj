@@ -20,19 +20,13 @@
     <PackageReference Include="System.Data.Common" Version="4.3.0" ExcludeAssets="all"/>
     <Reference Include="System.Xml"/>
     <Reference Include="System.Configuration"/>
-    <ProjectReference Include="..\Servicio\Servicio.csproj"><Project>{72BFCC53-9AE8-46D4-A9E6-1E7168DA2C77}</Project><Name>Servicio</Name></ProjectReference>
-    <Compile Include="Duenios.cs"/>
-    <Compile Include="Mascotas.cs"/>
-    <Compile Include="Profesionales.cs"/>
-    <Compile Include="Especialidades.cs"/>
-    <Compile Include="Turnos.cs"/>
-    <Compile Include="Pagos.cs"/>
-    <Compile Include="Agenda.cs"/>
-    <Compile Include="Historial.cs"/>
-    <Compile Include="Facturacion.cs"/>
-    <Compile Include="Frecuencia.cs"/>
-    <Compile Include="Auditoria.cs"/>
-    <Compile Include="Reporte.cs"/>
+    <Compile Include="Duenio.cs" />
+    <Compile Include="Especialidad.cs" />
+    <Compile Include="HistoriaClinica.cs" />
+    <Compile Include="Mascota.cs" />
+    <Compile Include="Pago.cs" />
+    <Compile Include="Profesional.cs" />
+    <Compile Include="Turno.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
 </Project>
