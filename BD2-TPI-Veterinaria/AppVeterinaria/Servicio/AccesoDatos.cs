@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 
 namespace Servicio
 {
-    // Abre una conexión por operación y recibe consultas parametrizadas.
     public class AccesoDatos
     {
         private readonly string cadena =
