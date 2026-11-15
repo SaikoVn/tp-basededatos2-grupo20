@@ -1,5 +1,5 @@
 
--- Script demostrativo para el video del TPI (SSMS + Guia para la App Web)
+-- Script demostrativo para el video del TPI.
 
 USE Veterinaria;
 GO
