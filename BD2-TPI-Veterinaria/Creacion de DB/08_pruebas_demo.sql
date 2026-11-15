@@ -214,38 +214,3 @@ SELECT * FROM dbo.AuditoriaTurnos
 ORDER BY id_auditoria;
 GO
 
-/*
-===============================================================================
-PARTE 4: GUIA PASO A PASO PARA DEMOSTRAR LA APLICACION WEB EN EL VIDEO
-===============================================================================
-Los Turnos 17, 18, 19 y 20 quedaron listos en estado 'pendiente' para la Web:
-
-1. PANTALLAS DE VISTAS Y UDF:
-   - "Agenda": consulta vw_AgendaTurnosActivos (filtrar por mascota o profesional).
-   - "Historial": consulta vw_HistorialClinicoPorMascota (filtrar por "Nube" o
-     "Rocco" para mostrar que su historial clinico se mantiene aunque esten dados de baja).
-   - "Facturacion": consulta vw_ResumenFacturacionPorProfesional (mostrar los cobros
-     acumulados y que Nicolas Vera y Carla Gomez figuran con $0).
-   - "Frecuencia": consulta vw_FrecuenciaConsultasMascotas (Milo ya aparece primero
-     con 3 consultas atendidas tras cobrar el Turno 12).
-
-2. PANTALLA DE REPORTE (PROCEDIMIENTO 1):
-   - "Reporte por profesional": seleccionar a "Garcia, Eva · MP-1001", desde
-     01/11/2026 hasta 30/11/2026 y hacer clic en "Consultar".
-
-3. ATENCION Y COBRO EN TRANSACCION (PROCEDIMIENTO 2 + HISTORIA CLINICA):
-   - Ir a "Turnos" y en el Turno 17 (Toby) hacer clic en "Registrar atencion".
-   - Cargar Diagnostico, Tratamiento, Comprobante "COMP-0010", Monto "20000" y
-     Metodo "Transferencia", y guardar.
-   - Mostrar en "Pagos" y en "Historial" el nuevo registro creado.
-
-4. TRIGGERS Y AUDITORIA EN VIVO DESDE LA WEB:
-   - En "Turnos":
-     * Intentar dar de alta un turno superpuesto en el mismo horario -> mostrar la
-       alerta roja devuelta por el trigger (Error 50012).
-     * En el Turno 18 (Lola), hacer clic en "Reprogramar" y cambiar el horario.
-     * En el Turno 19 (Max), hacer clic en "Cancelar" y luego en "Eliminar".
-   - Ir a "Auditoria" y filtrar por Turno "19" para mostrar en pantalla sus eventos
-     de alta, cancelado y baja conservados como referencia historica.
-===============================================================================
-*/
