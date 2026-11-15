@@ -1,46 +1,83 @@
 # Clínica Veterinaria · Base de Datos II (TPI)
 
-Trabajo Práctico Integrador de **Base de Datos II** — Tecnicatura Universitaria en Programación (UTN - Facultad Regional General Pacheco).
+Trabajo Práctico Integrador de **Base de Datos II** — Tecnicatura Universitaria en Programación, UTN Facultad Regional General Pacheco.
+
+## Requisitos
+
+- SQL Server y SQL Server Management Studio (SSMS).
+- Visual Studio con soporte para ASP.NET Web Forms y .NET Framework 4.8.
+- IIS Express, disponible desde Visual Studio.
 
 ## Puesta en marcha
 
-1. Ejecutar en **SQL Server Management Studio (SSMS)** los scripts de creación y carga en orden numérico (`01_tablas.sql` a `07_datos.sql`). El archivo `08_pruebas_demo.sql` contiene las pruebas por bloques para la demostración en SSMS.
-2. Abrir la solución **`BD2-TPI-Veterinaria/AppVeterinaria/AppVeterinaria.sln`** en Visual Studio.
-3. Restaurar los paquetes NuGet y compilar la solución. Establecer **`App-Veterinaria-BD2-TPI`** como proyecto de inicio y **`Default.aspx`** como página inicial.
-4. En **`Web.config`**, verificar que la cadena de conexión `Veterinaria` apunte a la instancia de SQL Server utilizada en SSMS (por defecto usa `Server=.;Database=Veterinaria;Integrated Security=True`).
-5. Ejecutar la aplicación con **IIS Express**.
+### 1. Crear y cargar la base de datos
 
-## Orden de ejecución de los scripts SQL
+En SSMS, ejecutar una sola vez y en orden los scripts de la carpeta `Creacion de DB`:
+
+1. `01_tablas.sql`
+2. `02_constraints.sql`
+3. `03_funciones.sql`
+4. `04_vistas.sql`
+5. `05_procedimientos_almacenados.sql`
+6. `06_triggers.sql`
+7. `07_datos.sql`
+
+El primer script crea la base `Veterinaria` si todavía no existe y luego crea sus tablas. Los scripts siguientes agregan objetos y datos; por eso, no se deben volver a ejecutar sobre una base ya inicializada. `07_datos.sql` carga datos de ejemplo para usar la aplicación y las demostraciones.
+
+`08_pruebas_demo.sql` es opcional. Ejecutarlo después del script `07`, sobre datos de demostración, y una sola vez: realiza operaciones que modifican la base, como registrar un pago, reprogramar y cancelar turnos y eliminar uno físicamente.
+
+### 2. Configurar la conexión
+
+La cadena de conexión está en `AppVeterinaria/App-Veterinaria-BD2-TPI/Web.config`, bajo el nombre `Veterinaria`. Por defecto apunta a:
+
+```text
+Server=.;Database=Veterinaria;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;Connect Timeout=5
+```
+
+Si SQL Server está en otra instancia, cambiar `Server=.` por el nombre correspondiente. 
+
+### 3. Abrir y ejecutar la aplicación
+
+1. Abrir `AppVeterinaria/AppVeterinaria.sln` en Visual Studio.
+2. Restaurar los paquetes NuGet y compilar la solución.
+3. Establecer `App-Veterinaria-BD2-TPI` como proyecto de inicio.
+4. Ejecutar con IIS Express. `Default.aspx` está configurada como página predeterminada.
+
+## Scripts y objetos de base de datos
 
 | Script | Contenido |
-| :--- | :--- |
-| `01_tablas.sql` | Creación de la base de datos `Veterinaria` y las 8 tablas del modelo |
-| `02_constraints.sql` | Restricciones `FOREIGN KEY`, `UNIQUE`, `CHECK`, `DEFAULT` e índice de agenda |
-| `03_funciones.sql` | Función escalar `fn_CantidadConsultasMascota` |
-| `04_vistas.sql` | Vistas `vw_AgendaTurnosActivos`, `vw_HistorialClinicoPorMascota`, `vw_ResumenFacturacionPorProfesional` y `vw_FrecuenciaConsultasMascotas` |
-| `05_procedimientos_almacenados.sql` | Procedimientos `sp_ReporteTurnosProfesional` y `sp_RegistrarPagoYAtenderTurno` |
-| `06_triggers.sql` | Triggers `trg_Turnos_AfterInsert`, `trg_Turnos_AfterUpdate` y `trg_Turnos_AfterDelete` |
-| `07_datos.sql` | Carga inicial completa (6 especialidades, 8 dueños, 12 mascotas, 6 profesionales, 20 turnos, 8 pagos, 8 historias clínicas, auditoría inicial y bajas lógicas) |
-| `08_pruebas_demo.sql` | Pruebas por bloques para el video demostrativo (vistas, UDF, procedimientos y triggers) |
+| --- | --- |
+| `01_tablas.sql` | Crea la base `Veterinaria` y las tablas `Duenios`, `Especialidades`, `Mascotas`, `Profesionales`, `Turnos`, `Pagos`, `HistoriasClinicas` y `AuditoriaTurnos`. |
+| `02_constraints.sql` | Agrega claves foráneas, restricciones `UNIQUE`, `CHECK` y `DEFAULT`, e índices para las consultas de turnos. |
+| `03_funciones.sql` | Define `fn_CantidadConsultasMascota`. |
+| `04_vistas.sql` | Define `vw_AgendaTurnosActivos`, `vw_HistorialClinicoPorMascota`, `vw_ResumenFacturacionPorProfesional` y `vw_FrecuenciaConsultasMascotas`. |
+| `05_procedimientos_almacenados.sql` | Define `sp_ReporteTurnosProfesional` y `sp_RegistrarPagoYAtenderTurno`. |
+| `06_triggers.sql` | Define triggers para altas, modificaciones y bajas físicas de turnos; también registra eventos de auditoría. |
+| `07_datos.sql` | Carga datos iniciales de ejemplo. |
+| `08_pruebas_demo.sql` | Contiene consultas y operaciones de demostración para vistas, procedimientos, triggers y auditoría. |
 
-## Arquitectura y organización del proyecto
+## Arquitectura de la aplicación
 
-- **`AppVeterinaria/Dominio`**: Contiene las **clases de entidad (modelos de datos)** que representan las tablas del sistema mediante propiedades `{ get; set; }` y valores iniciales por defecto (`Duenio.cs`, `Mascota.cs`, `Especialidad.cs`, `Profesional.cs`, `Turno.cs`, `Pago.cs`, `HistoriaClinica.cs` y `AuditoriaTurno.cs`).
-- **`AppVeterinaria/Servicio`**: Contiene `AccesoDatos.cs`, que encapsula la conexión a SQL Server (`SqlConnection`, `SqlCommand` y `SqlDataReader`) y provee los métodos `ObtenerTabla`, `EjecutarConsulta`, `EjecutarConsultaEscalar`, `setConsulta`, `setParametro`, `ejecutarLectura`, `ejecutarAccion` y `cerrarConexion` usando ADO.NET y `Microsoft.Data.SqlClient`.
-- **`AppVeterinaria/App-Veterinaria-BD2-TPI`**: Proyecto web ASP.NET Web Forms (.NET Framework 4.8). Cada pantalla tiene su vista `.aspx`, su código de eventos `.aspx.cs` y su archivo `.designer.cs`. En los eventos `.aspx.cs` se instancian las entidades de `Dominio`, se arman las listas de parámetros (`List<SqlParameter>`) y se ejecutan las consultas u operaciones a través de `AccesoDatos` (`Servicio`). `Master.Master` define el menú principal y `PaginaClinica.cs` comparte las validaciones de controles y el manejo de errores personalizados de SQL Server (`THROW 50xxx`).
-- **`Creacion de DB` / `QUERYS (.SQL)`**: Reúne los scripts SQL enumerados del `01` al `08`.
+La solución separa la interfaz web, los modelos de dominio y el acceso a datos:
 
-## Pantallas y objetos SQL
+- **`AppVeterinaria/Dominio`**: clases de entidad con propiedades para representar los datos del sistema: `Duenio`, `Mascota`, `Especialidad`, `Profesional`, `Turno`, `Pago` e `HistoriaClinica`.
+- **`AppVeterinaria/Servicio`**: `AccesoDatos.cs` centraliza el acceso a SQL Server con ADO.NET y `Microsoft.Data.SqlClient`. Expone `Consultar`, `Ejecutar` y `Param` para trabajar con consultas parametrizadas.
+- **`AppVeterinaria/App-Veterinaria-BD2-TPI`**: aplicación ASP.NET Web Forms sobre .NET Framework 4.8. Las páginas `.aspx` presentan la interfaz y sus archivos `.aspx.cs` gestionan eventos y operaciones. El código de las páginas utiliza las entidades de `Dominio` y delega las consultas y escrituras en `AccesoDatos`.
+- **`PaginaClinica.cs`**: reúne validaciones y manejo de errores de SQL Server utilizados por las páginas.
 
-- **Inicio (`Default.aspx`)**: Pantalla principal con accesos directos a la gestión de turnos, consulta de pagos y reporte por profesional.
-- **Dueños, Mascotas, Profesionales y Especialidades**: Instancian las entidades `Duenio`, `Mascota`, `Profesional` y `Especialidad` para registrar y editar filas en sus tablas respectivas. La baja lógica de mascotas y la desactivación de profesionales actualizan el campo `activo` verificando previamente que no existan turnos pendientes.
-- **Turnos (`Turnos.aspx`)**:
-  - Instancia objetos `Turno` para dar de alta, reprogramar, cancelar y eliminar físicamente turnos (cuando están cancelados y sin pagos ni historia clínica), disparando automáticamente los tres triggers del script `06` (`trg_Turnos_AfterInsert`, `trg_Turnos_AfterUpdate` y `trg_Turnos_AfterDelete`).
-  - En la acción **Registrar atención**, instancia `HistoriaClinica` y `Pago` y ejecuta dentro de una misma transacción `sp_RegistrarPagoYAtenderTurno` junto con el `INSERT` en `HistoriasClinicas`.
-- **Pagos (`Pagos.aspx`)**: Consulta y filtra los pagos registrados en `Pagos` junto con los datos del turno, mascota y profesional.
-- **Agenda, Historial, Facturación y Frecuencia**: Consultan respectivamente `vw_AgendaTurnosActivos`, `vw_HistorialClinicoPorMascota`, `vw_ResumenFacturacionPorProfesional` y `vw_FrecuenciaConsultasMascotas` (utilizando `fn_CantidadConsultasMascota` para contabilizar los turnos atendidos).
-- **Reporte por profesional (`Reporte.aspx`)**: Ejecuta `sp_ReporteTurnosProfesional` desde el inicio del primer día seleccionado hasta la medianoche posterior al último día (`@hasta_exclusivo`).
-- **Auditoría (`Auditoria.aspx`)**: Consulta y filtra `AuditoriaTurnos` por ID de auditoría, ID histórico de turno, tipo de evento (`alta`, `reprogramacion`, `cancelado`, `baja`) y rango de fechas, conservando el ID del turno aun después de su eliminación física.
+## Pantallas y funciones
+
+- **Inicio (`Default.aspx`)**: accesos a la gestión de turnos, pagos y reportes.
+- **Dueños, Mascotas, Profesionales y Especialidades**: permiten consultar y gestionar los registros correspondientes. Las mascotas pueden darse de baja lógicamente y los profesionales desactivarse, con validaciones de turnos pendientes.
+- **Turnos (`Turnos.aspx`)**: permite dar de alta, reprogramar y cancelar turnos, además de eliminar físicamente turnos cancelados que no tengan pagos ni historia clínica. Los triggers registran los eventos de auditoría y validan reglas como la superposición de horarios.
+- **Registrar atención**: registra el pago, marca el turno como atendido e inserta la historia clínica dentro de una misma transacción.
+- **Pagos (`Pagos.aspx`)**: consulta y filtra pagos junto con información del turno, la mascota y el profesional.
+- **Agenda (`Agenda.aspx`)**: consulta la vista `vw_AgendaTurnosActivos`.
+- **Historial (`Historial.aspx`)**: consulta `vw_HistorialClinicoPorMascota`.
+- **Facturación (`Facturacion.aspx`)**: consulta `vw_ResumenFacturacionPorProfesional`.
+- **Frecuencia (`Frecuencia.aspx`)**: consulta `vw_FrecuenciaConsultasMascotas`, que utiliza `fn_CantidadConsultasMascota`.
+- **Reporte por profesional (`Reporte.aspx`)**: ejecuta `sp_ReporteTurnosProfesional`. El día final seleccionado se incluye usando como límite exclusivo la medianoche del día siguiente.
+- **Auditoría (`Auditoria.aspx`)**: permite consultar y filtrar los eventos de alta, reprogramación, cancelación y baja. La auditoría conserva el identificador histórico del turno aunque este se elimine físicamente.
 
 ## Integrantes — Grupo N.º 20
 
