@@ -21,7 +21,7 @@ Trabajo Práctico Integrador de **Base de Datos II** — Tecnicatura Universitar
 | `05_procedimientos_almacenados.sql` | Procedimientos `sp_ReporteTurnosProfesional` y `sp_RegistrarPagoYAtenderTurno` |
 | `06_triggers.sql` | Triggers `trg_Turnos_AfterInsert`, `trg_Turnos_AfterUpdate` y `trg_Turnos_AfterDelete` |
 | `07_datos.sql` | Carga inicial completa (6 especialidades, 8 dueños, 12 mascotas, 6 profesionales, 20 turnos, 8 pagos, 8 historias clínicas, auditoría inicial y bajas lógicas) |
-| `08_pruebas_demo.sql` | Pruebas por bloques para el video demostrativo (vistas, UDF, procedimientos, triggers y guía para la app web) |
+| `08_pruebas_demo.sql` | Pruebas por bloques para el video demostrativo (vistas, UDF, procedimientos y triggers) |
 
 ## Arquitectura y organización del proyecto
 
