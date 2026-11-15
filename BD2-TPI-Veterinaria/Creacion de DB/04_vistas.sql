@@ -1,5 +1,4 @@
--- VISTAS: consultas ya preparadas para mostrar informacion
--- Las vistas son SELECT guardados con un nombre.
+-- VISTAS: consultas ya preparadas para mostrar informacion.
 
 USE Veterinaria;
 GO
