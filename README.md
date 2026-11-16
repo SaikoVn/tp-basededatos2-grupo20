@@ -22,7 +22,7 @@ En SSMS, ejecutar una sola vez y en orden los scripts de la carpeta `Creacion de
 6. `06_triggers.sql`
 7. `07_datos.sql`
 
-El primer script crea la base `Veterinaria` si todavía no existe y luego crea sus tablas. Los scripts siguientes agregan objetos y datos; por eso, no se deben volver a ejecutar sobre una base ya inicializada. `07_datos.sql` carga datos de ejemplo para usar la aplicación y las demostraciones.
+El primer script crea la base `Veterinaria` y luego crea sus tablas. Los scripts siguientes agregan objetos y datos; por eso, no se deben volver a ejecutar sobre una base ya inicializada. `07_datos.sql` carga datos de ejemplo para usar la aplicación y las demostraciones.
 
 `08_pruebas_demo.sql` es opcional. Ejecutarlo después del script `07`, sobre datos de demostración, y una sola vez: realiza operaciones que modifican la base, como registrar un pago, reprogramar y cancelar turnos y eliminar uno físicamente.
 
