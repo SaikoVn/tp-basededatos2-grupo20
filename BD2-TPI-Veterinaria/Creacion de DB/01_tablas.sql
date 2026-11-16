@@ -1,6 +1,5 @@
 
-IF DB_ID(N'Veterinaria') IS NULL
-    EXEC(N'CREATE DATABASE [Veterinaria]');
+CREATE DATABASE [Veterinaria];
 GO
 USE [Veterinaria];
 GO
